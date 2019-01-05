@@ -57,9 +57,7 @@ class RefundRequest extends Request
                 'string',
                 function ($attribute, $value, $fail) {//检查余额
                     $charge = TransactionService::getChargeById($this->charge_id);
-                    if ($charge->amount_refunded >= $this->amount) {//已退款的大于等于当前退款金额
-                        return $fail('Already retired.');
-                    } elseif (($charge->amount_refunded + $this->amount) > $charge->amount) {//多次退款总额超出
+                    if ($charge->refundable < $value) {//可退款金额小于当前
                         return $fail('Already retired.');
                     }
                 }

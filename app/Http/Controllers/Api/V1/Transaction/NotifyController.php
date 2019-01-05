@@ -25,7 +25,7 @@ class NotifyController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api')->except(['charge']);
+        $this->middleware('auth:api')->except(['charge','refund']);
     }
 
     /**
@@ -44,8 +44,6 @@ class NotifyController extends Controller
                 if ($params['refund_status'] == 'SUCCESS') {//入账
                     $refund = TransactionService::getRefundById($params['out_refund_no']);
                     $refund->setRefunded($params['success_time'], $params);
-                } else {
-
                 }
                 Log::debug('Wechat refund notify', $params->all());
             }

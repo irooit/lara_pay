@@ -14,6 +14,7 @@ use Laravel\Passport\Client;
 
 /**
  * 退款处理模型
+ * @property int $amount
  *
  * @author Tongle Xu <xutongle@gmail.com>
  */
@@ -53,7 +54,7 @@ class TransactionRefund extends Model
      * @var array
      */
     protected $casts = [
-        'amount'=>'int',
+        'amount' => 'int',
         'succeed' => 'boolean',
         'metadata' => 'array',
         'extra' => 'array'
@@ -109,6 +110,7 @@ class TransactionRefund extends Model
     public function setFailure($code, $msg)
     {
         $succeed = (bool)$this->update(['status' => self::STATUS_FAILED, 'failure_code' => $code, 'failure_msg' => $msg]);
+        $this->charge->update(['amount_refunded' => bcsub($this->amount_refunded, $this->amount)]);//可退款金额，减回去
         return $succeed;
     }
 

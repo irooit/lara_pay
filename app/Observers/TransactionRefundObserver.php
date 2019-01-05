@@ -53,33 +53,6 @@ class TransactionRefundObserver
      */
     public function created(TransactionRefund $refund)
     {
-        $refund->charge->update(['refunded' => true, 'amount_refunded' => $refund->charge->amount_refunded + $refund->amount]);
-        $refund->update(['charge_order_id' => $refund->charge->order_id]);
-        $channel = TransactionService::getChannel($refund->charge->channel);
-        if ($refund->charge->channel == 'weixin') {
-            $refundAccount = 'REFUND_SOURCE_RECHARGE_FUNDS';
-            if ($refund->funding_source == TransactionRefund::FUNDING_SOURCE_UNSETTLED) {
-                $refundAccount = 'REFUND_SOURCE_UNSETTLED_FUNDS';
-            }
-            $order = [
-                'out_refund_no' => $refund->id,
-                'out_trade_no' => $refund->charge->id,
-                'total_fee' => $refund->charge->amount,
-                'refund_fee' => $refund->amount,
-                'refund_fee_type' => $refund->charge->currency,
-                'refund_desc' => $refund->description,
-                'refund_account' => $refundAccount,
-                'notify_url' => config('pay.wechat.refund_notify_url'),
-                //'spbill_create_ip' => '60.208.112.178',
-            ];
-            try {
-                $response = $channel->refund($order);
-                $refund->update(['transaction_no' => $response->transaction_id, 'extra' => $response]);
-            } catch (\Exception $exception) {//设置提现失败
-                $refund->setFailure('FAIL', $exception->getMessage());
-            }
-        } else if ($refund->charge->channel == 'alipay') {
-
-        }
+        TransactionService::refund($refund);
     }
 }

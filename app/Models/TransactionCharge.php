@@ -26,6 +26,9 @@ use Laravel\Passport\Client;
  * @property float $amount
  * @property string $currency
  * @property boolean $paid
+ * @property int $amount_refunded
+ *
+ * @property-read int $refundable
  *
  * @author Tongle Xu <xutongle@gmail.com>
  */
@@ -48,7 +51,7 @@ class TransactionCharge extends Model
      * @var array 批量赋值属性
      */
     public $fillable = [
-        'id', 'app_id', 'paid', 'type', 'channel', 'order_id', 'amount', 'currency', 'subject', 'body', 'client_ip', 'extra', 'time_paid',
+        'id', 'app_id', 'paid', 'refunded', 'reversed', 'type', 'channel', 'order_id', 'amount', 'currency', 'subject', 'body', 'client_ip', 'extra', 'time_paid',
         'time_expire', 'transaction_no', 'amount_refunded', 'failure_code', 'failure_msg', 'metadata',
         'credential', 'description'
     ];
@@ -88,6 +91,15 @@ class TransactionCharge extends Model
     public function app()
     {
         return $this->belongsTo(Client::class);
+    }
+
+    /**
+     * 获取可退款钱数
+     * @return string
+     */
+    public function getRefundableAttribute()
+    {
+        return bcsub($this->amount, $this->amount_refunded);
     }
 
     /**
