@@ -7,7 +7,7 @@
 
 namespace App\Models;
 
-use App\Jobs\TransactionChargeCallbackJob;
+use App\Jobs\TransactionCallbackJob;
 use App\Models\Relations\BelongsToUserTrait;
 use App\Services\TransactionService;
 use Exception;
@@ -31,7 +31,7 @@ use Laravel\Passport\Client;
  */
 class TransactionCharge extends Model
 {
-    use BelongsToUserTrait,SoftDeletes;
+    use BelongsToUserTrait, SoftDeletes;
 
     /**
      * The table associated with the model.
@@ -59,7 +59,10 @@ class TransactionCharge extends Model
      * @var array
      */
     protected $casts = [
+        'amount' => 'int',
         'paid' => 'boolean',
+        'refunded' => 'boolean',
+        'reversed' => 'boolean',
         'metadata' => 'array',
         'credential' => 'array',
     ];
@@ -129,7 +132,7 @@ class TransactionCharge extends Model
         $paid = (bool)$this->update(['transaction_no' => $transactionNo, 'time_paid' => $this->freshTimestamp(), 'paid' => true]);
         Log::debug('system notify TransactionChargeCallbackJob');
         if ($this->app->notify_url) {
-            TransactionChargeCallbackJob::dispatch($this->app->notify_url, $this->toArray());
+            TransactionCallbackJob::dispatch($this->app->notify_url, $this->toArray());
         }
         return $paid;
     }

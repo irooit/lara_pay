@@ -53,9 +53,13 @@ Route::group(['prefix' => 'v1'], function (RouteContract $api) {
     Route::group(['prefix' => 'transaction'], function () {
         Route::post('charge', 'Api\V1\Transaction\ChargeController@store');//收款
         Route::post('charge/{id}', 'Api\V1\Transaction\ChargeController@query');//收款查询
-        Route::post('notify/{channel}', 'Api\V1\Transaction\NotifyController@charge');//收款通知回调
         Route::post('refund', 'Api\V1\Transaction\RefundController@store');//退款
         //Route::post('transfer', 'Api\V1\Transaction\TransferController@store');//转账
+
+        Route::group(['prefix' => 'notify'], function () {
+            Route::post('charge/{channel}', 'Api\V1\Transaction\NotifyController@charge');//收款通知回调
+            Route::post('refund/{channel}', 'Api\V1\Transaction\NotifyController@refund');//退款通知回调
+        });
     });
 
     /**

@@ -37,6 +37,7 @@ class RefundResource extends Resource
             'charge_id' => $this->charge_id,
             'amount' => $this->amount,
             'succeed' => $this->succeed,
+            'status' => $this->status,
             'description' => $this->description,
             'failure_code' => $this->failure_code,
             'failure_msg' => $this->failure_msg,
@@ -46,7 +47,6 @@ class RefundResource extends Resource
             'metadata' => $this->metadata,
             'extra' => $this->extra,
             'time_succeed' => $this->time_succeed,
-            'charge' => new ChargeResource($this->charge),
             'created_at' => $this->created_at->toDateTimeString(),
             'updated_at' => $this->updated_at->toDateTimeString(),
         ];

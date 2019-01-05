@@ -27,8 +27,8 @@ class CreateTransactionRefundsTable extends Migration
             $table->string('funding_source',20)->nullable();//微信及 QQ 类退款资金来源。取值范围： unsettled_funds ：使用未结算资金退款； recharge_funds ：微信-使用可用余额退款，QQ-使用可用现金账户资金退款。
             //注：默认值  unsettled_funds ，该参数对于微信渠道的退款来说仅适用于微信老资金流商户使用，包括  wx 、 wx_pub 、 wx_pub_qr 、 wx_lite 、 wx_wap 、 wx_pub_scan 六个渠道；
             //新资金流退款资金默认从基本账户中扣除。该参数仅在请求退款，传入该字段时返回。
-            $table->string('metadata')->nullable();//元数据
-            $table->string('extra')->nullable();//附加参数
+            $table->json('metadata')->nullable();//元数据
+            $table->json('extra')->nullable();//附加参数
             $table->timestamp('time_succeed', 0)->nullable();//退款成功的时间，用 Unix 时间戳表示。
             $table->softDeletes();
             $table->timestamps();

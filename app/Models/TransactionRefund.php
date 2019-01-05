@@ -7,6 +7,7 @@
 
 namespace App\Models;
 
+use App\Jobs\TransactionCallbackJob;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Passport\Client;
@@ -20,9 +21,9 @@ class TransactionRefund extends Model
 {
     use SoftDeletes;
     //退款状态
-    const STATUS_PENDING = 0b0;
-    const STATUS_SUCCEEDED = 0b1;
-    const STATUS_FAILED = 0b10;
+    const STATUS_PENDING = 'pending';
+    const STATUS_SUCCEEDED = 'succeeded';
+    const STATUS_FAILED = 'failed';
 
     //退款资金来源
     const FUNDING_SOURCE_UNSETTLED = 'unsettled_funds';//使用未结算资金退款
@@ -52,6 +53,7 @@ class TransactionRefund extends Model
      * @var array
      */
     protected $casts = [
+        'amount'=>'int',
         'succeed' => 'boolean',
         'metadata' => 'array',
         'extra' => 'array'
@@ -96,5 +98,35 @@ class TransactionRefund extends Model
     public function getSucceedAttribute()
     {
         return $this->status == self::STATUS_SUCCEEDED;
+    }
+
+    /**
+     * 设置退款错误
+     * @param string $code
+     * @param string $msg
+     * @return bool
+     */
+    public function setFailure($code, $msg)
+    {
+        $succeed = (bool)$this->update(['status' => self::STATUS_FAILED, 'failure_code' => $code, 'failure_msg' => $msg]);
+        return $succeed;
+    }
+
+    /**
+     * 设置退款成功
+     * @param string $successTime
+     * @param array $params
+     * @return bool
+     */
+    public function setRefunded($successTime, $params = [])
+    {
+        if ($this->succeed) {
+            return true;
+        }
+        $this->update(['status' => self::STATUS_SUCCEEDED, 'time_succeed' => $successTime, 'extra' => $params]);
+        if ($this->app->notify_url) {
+            TransactionCallbackJob::dispatch($this->app->notify_url, $this->toArray());
+        }
+        return $this->succeed;
     }
 }

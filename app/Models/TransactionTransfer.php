@@ -42,6 +42,7 @@ class TransactionTransfer extends Model
      * @var array
      */
     protected $casts = [
+        'amount'=>'int',
         'metadata' => 'array',
         'extra' => 'array'
     ];

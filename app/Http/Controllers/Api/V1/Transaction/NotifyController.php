@@ -29,6 +29,33 @@ class NotifyController extends Controller
     }
 
     /**
+     * 退款通知
+     * @param Request $request
+     * @param string $channel
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Yansongda\Pay\Exceptions\InvalidArgumentException
+     */
+    public function refund(Request $request, $channel)
+    {
+        try {
+            $pay = TransactionService::getChannel($channel);
+            $params = $pay->verify(null, true); // 验签
+            if ($channel == 'weixin') {
+                if ($params['refund_status'] == 'SUCCESS') {//入账
+                    $refund = TransactionService::getRefundById($params['out_refund_no']);
+                    $refund->setRefunded($params['success_time'], $params);
+                } else {
+
+                }
+                Log::debug('Wechat refund notify', $params->all());
+            }
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+        }
+        return $pay->success();
+    }
+
+    /**
      * 收款通知
      * @param Request $request
      * @param string $channel

@@ -15,11 +15,11 @@ use Illuminate\Queue\SerializesModels;
 use XuTL\Supports\HttpClient;
 
 /**
- * Class TransactionChargeCallbackJob
+ * Class TransactionCallbackJob
  *
  * @author Tongle Xu <xutongle@gmail.com>
  */
-class TransactionChargeCallbackJob implements ShouldQueue
+class TransactionCallbackJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 

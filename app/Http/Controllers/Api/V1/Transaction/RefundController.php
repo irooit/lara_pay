@@ -36,6 +36,7 @@ class RefundController extends Controller
     {
         $data = $request->all();
         $data['funding_source'] = TransactionRefund::FUNDING_SOURCE_UNSETTLED;
+        $data['status'] = TransactionRefund::STATUS_PENDING;
         $refund = TransactionRefund::create($data);
         return new RefundResource($refund);
     }

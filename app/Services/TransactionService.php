@@ -8,6 +8,7 @@
 namespace App\Services;
 
 use App\Models\TransactionCharge;
+use App\Models\TransactionRefund;
 use Exception;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Yansongda\LaravelPay\Facades\Pay;
@@ -45,6 +46,21 @@ class TransactionService
     public static function getChargeById($id)
     {
         if (($model = TransactionCharge::find($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested charge does not exist.');
+        }
+    }
+
+    /**
+     * 获取退款单
+     * @param int $id
+     * @return TransactionRefund
+     * @throws NotFoundHttpException
+     */
+    public static function getRefundById($id)
+    {
+        if (($model = TransactionRefund::find($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested charge does not exist.');
