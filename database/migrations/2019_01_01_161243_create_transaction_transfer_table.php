@@ -26,7 +26,7 @@ class CreateTransactionTransferTable extends Migration
             //  allinpay 为 20 ~ 40 位不能重复的数字字母组合，必须以签约的通联的商户号开头（建议组合格式：通联商户号 + 时间戳 + 固定位数顺序流水号，不包含 + 号）;
             // jdpay 为 1 ~ 64 位不能重复的数字字母组合；
             // balance 为 1 ~ 64 位不能重复的数字字母组合，支持"-"和"_"。
-            $table->unsignedInteger('amount',10);//付款金额
+            $table->unsignedInteger('amount');//付款金额
             $table->string('currency',3);//三位 ISO 货币代码，目前仅支持人民币 cny。
             $table->string('recipient');//接收者 id，使用微信企业付款到零钱时为用户在  wx 、 wx_pub 及  wx_lite 渠道下的  open_id ，使用企业付款到银行卡时不需要此参数；
             //渠道为  unionpay 时，不需要传该参数；
@@ -43,8 +43,8 @@ class CreateTransactionTransferTable extends Migration
 
             $table->string('transaction_no',64)->nullable();//交易流水号，由第三方渠道提供。
             $table->string('failure_msg')->nullable();//企业付款订单的错误消息的描述。
-            $table->string('metadata')->nullable();//元数据
-            $table->string('extra')->nullable();//附加参数
+            $table->json('metadata')->nullable();//元数据
+            $table->json('extra')->nullable();//附加参数
             $table->timestamp('transferred_at', 0)->nullable();//交易完成时间
             $table->timestamps();
         });

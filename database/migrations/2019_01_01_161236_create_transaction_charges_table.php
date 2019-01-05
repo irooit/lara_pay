@@ -21,8 +21,8 @@ class CreateTransactionChargesTable extends Migration
             $table->boolean('reversed')->default(false)->nullable();//订单是否撤销
             $table->string('channel', 64);//付款渠道
             $table->string('type', 20);//交易类型 APP PC等
-            $table->morphs('order');//商户订单号，适配每个渠道对此参数的要求，必须在商户的系统内唯一
-            $table->unsignedInteger('amount', 10);//订单总金额（必须大于 0),最小的货币单位
+            $table->string('order_id')->index();//商户订单号，适配每个渠道对此参数的要求，必须在商户的系统内唯一
+            $table->unsignedInteger('amount');//订单总金额（必须大于 0),最小的货币单位
             $table->string('currency', 3);//3 位 ISO 货币代码，人民币为  CNY 。
             $table->string('subject', 64);//商品标题，该参数最长为 64 个 Unicode 字符
             $table->string('body', 128)->nullable();//商品描述信息，该参数最长为 128 个 Unicode 字符
@@ -34,8 +34,8 @@ class CreateTransactionChargesTable extends Migration
             $table->unsignedInteger('amount_refunded', 10)->nullable()->default(0);//已退款总金额，单位为对应币种的最小货币单位，例如：人民币为分。
             $table->string('failure_code')->nullable();//订单的错误码
             $table->string('failure_msg')->nullable();//订单的错误消息的描述。
-            $table->text('metadata')->nullable();//metadata 参数 数组，一些源数据。
-            $table->text('credential')->nullable();//支付凭证，用于客户端发起支付。
+            $table->json('metadata')->nullable();//metadata 参数 数组，一些源数据。
+            $table->json('credential')->nullable();//支付凭证，用于客户端发起支付。
             $table->string('description', 191)->nullable();//订单附加说明，最多 191 个 Unicode 字符。
             $table->timestamps();
 

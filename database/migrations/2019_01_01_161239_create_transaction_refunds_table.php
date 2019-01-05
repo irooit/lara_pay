@@ -17,7 +17,7 @@ class CreateTransactionRefundsTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('app_id');
             $table->unsignedInteger('charge_id');//支付  charge 对象的  id
-            $table->unsignedInteger('amount',10);//退款金额大于 0, 必须小于等于可退款金额，默认为全额退款。
+            $table->unsignedInteger('amount');//退款金额大于 0, 必须小于等于可退款金额，默认为全额退款。
             $table->string('status')->default('pending');//退款状态（目前支持三种状态: pending: 处理中; succeeded: 成功; failed: 失败）。
             $table->string('description',191)->nullable();//退款详情，最多 191 个 Unicode 字符。
             $table->string('failure_code')->nullable();//订单的错误码
