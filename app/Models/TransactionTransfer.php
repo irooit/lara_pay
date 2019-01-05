@@ -37,6 +37,13 @@ class TransactionTransfer extends Model
     public $incrementing = false;
 
     /**
+     * @var array 批量赋值属性
+     */
+    public $fillable = [
+        'id', 'app_id', 'channel', 'status', 'order_id', 'amount', 'currency', 'recipient_id', 'description', 'transaction_no', 'failure_msg', 'metadata', 'extra', 'transferred_at'
+    ];
+
+    /**
      * 这个属性应该被转换为原生类型.
      *
      * @var array
@@ -58,4 +65,15 @@ class TransactionTransfer extends Model
         'deleted_at',
         'transferred_at',
     ];
+
+    /**
+     * 设置退款错误
+     * @param string $code
+     * @param string $msg
+     * @return bool
+     */
+    public function setFailure($code, $msg)
+    {
+        return (bool)$this->update(['status' => self::STATUS_FAILED, 'failure_code' => $code, 'failure_msg' => $msg]);
+    }
 }

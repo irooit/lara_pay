@@ -9,6 +9,7 @@ namespace App\Services;
 
 use App\Models\TransactionCharge;
 use App\Models\TransactionRefund;
+use App\Models\TransactionTransfer;
 use Exception;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Yansongda\LaravelPay\Facades\Pay;
@@ -65,6 +66,40 @@ class TransactionService
         } else {
             throw new NotFoundHttpException('The requested charge does not exist.');
         }
+    }
+
+    /**
+     * 发起企业付款
+     * @param TransactionTransfer $transfer
+     * @return TransactionTransfer
+     * @throws Exception
+     */
+    public static function transfer(TransactionTransfer $transfer)
+    {
+        $channel = TransactionService::getChannel($transfer->channel);
+        if ($transfer->channel == 'weixin') {
+            $metadata = $transfer->metadata;
+            $config = [
+                'partner_trade_no' => $transfer->id,
+                'openid' => $transfer->recipient_id,
+                'check_name' => 'NO_CHECK',
+                'amount' => $transfer->amount,
+                'desc' => $transfer->description,
+                'type' => $transfer->metadata['type'],
+            ];
+
+            if (isset($metadata['check_name']) && $metadata['check_name'] != 'NO_CHECK') {
+                $config['check_name'] = $metadata['check_name'];
+                $config['re_user_name'] = $metadata['re_user_name'];
+            }
+            try {
+                $response = $channel->transfer($config);
+                $transfer->update(['transaction_no' => $response->payment_no, 'transferred_at' => $response->payment_time, 'extra' => $response]);
+            } catch (\Exception $exception) {//设置提现失败
+                $transfer->setFailure('FAIL', $exception->getMessage());
+            }
+        }
+        return $transfer;
     }
 
     /**

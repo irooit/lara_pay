@@ -24,7 +24,7 @@ class RefundController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api')->except(['notify']);
+        $this->middleware('auth:api');
     }
 
     /**

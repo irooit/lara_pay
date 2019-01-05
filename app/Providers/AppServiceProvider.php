@@ -5,9 +5,11 @@ namespace App\Providers;
 use App\Models\Tag;
 use App\Models\TransactionCharge;
 use App\Models\TransactionRefund;
+use App\Models\TransactionTransfer;
 use App\Models\User;
 use App\Observers\TransactionChargeObserver;
 use App\Observers\TransactionRefundObserver;
+use App\Observers\TransactionTransferObserver;
 use App\Observers\UserObserver;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Resources\Json\Resource;
@@ -31,7 +33,7 @@ class AppServiceProvider extends ServiceProvider
         User::observe(UserObserver::class);
         TransactionCharge::observe(TransactionChargeObserver::class);
         TransactionRefund::observe(TransactionRefundObserver::class);
-
+        TransactionTransfer::observe(TransactionTransferObserver::class);
         //多态映射表
 //        Relation::morphMap([
 //            'tags' => Tag::class,
