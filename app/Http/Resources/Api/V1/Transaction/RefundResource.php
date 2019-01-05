@@ -7,15 +7,14 @@
 
 namespace App\Http\Resources\Api\V1\Transaction;
 
-
 use App\Http\Resources\Resource;
 
 /**
- * Class TransactionChargeResource
+ * Class RefundResource
  *
  * @author Tongle Xu <xutongle@gmail.com>
  */
-class ChargeResource extends Resource
+class RefundResource extends Resource
 {
     /**
      * 禁用资源包裹
@@ -35,26 +34,19 @@ class ChargeResource extends Resource
         return [
             'id' => $this->id,
             'app_id' => $this->app_id,
-            'paid' => $this->paid,
-            'refunded' => $this->refunded,
-            'reversed' => $this->reversed,
-            'channel' => $this->channel,
-            'type' => $this->type,
-            'order_id' => $this->order_id,
+            'charge_id' => $this->charge_id,
             'amount' => $this->amount,
-            'currency' => $this->currency,
-            'subject' => $this->subject,
-            'body' => $this->body,
-            'client_ip' => $this->client_ip,
-            'time_paid' => $this->time_paid,
-            'time_expire' => $this->time_expire,
-            'transaction_no' => $this->transaction_no,
-            'amount_refunded' => $this->amount_refunded,
+            'succeed' => $this->succeed,
+            'description' => $this->description,
             'failure_code' => $this->failure_code,
             'failure_msg' => $this->failure_msg,
-            'extra' => $this->extra,
+            'charge_order_no' => $this->charge_order_no,
+            'transaction_no' => $this->transaction_no,
+            'funding_source' => $this->funding_source,
             'metadata' => $this->metadata,
-            'credential' => $this->credential,
+            'extra' => $this->extra,
+            'time_succeed' => $this->time_succeed,
+            'charge' => new ChargeResource($this->charge),
             'created_at' => $this->created_at->toDateTimeString(),
             'updated_at' => $this->updated_at->toDateTimeString(),
         ];

@@ -47,7 +47,7 @@ class TransactionCharge extends Model
      * @var array 批量赋值属性
      */
     public $fillable = [
-        'id','app_id', 'paid', 'type', 'channel', 'order_id', 'amount', 'currency', 'subject', 'body', 'client_ip', 'extra', 'time_paid',
+        'id', 'app_id', 'paid', 'type', 'channel', 'order_id', 'amount', 'currency', 'subject', 'body', 'client_ip', 'extra', 'time_paid',
         'time_expire', 'transaction_no', 'amount_refunded', 'failure_code', 'failure_msg', 'metadata',
         'credential', 'description'
     ];
@@ -71,6 +71,38 @@ class TransactionCharge extends Model
     public function app()
     {
         return $this->belongsTo(Client::class);
+    }
+
+    /**
+     * 关联退款
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function refunds()
+    {
+        return $this->hasMany(TransactionRefund::class);
+    }
+
+    /**
+     * 设置订单状态以撤销
+     * @return bool
+     */
+    public function setReversed()
+    {
+        return (bool)$this->update(['reversed' => true, 'credential' => null]);
+    }
+
+    /**
+     * 从交易里直接发起退款
+     * @param string $description
+     * @return bool
+     */
+    public function setRefund($description)
+    {
+        $refund = new TransactionRefund(['amount' => $this->amount, 'description' => $description, 'charge_id' => $this->id, 'charge_order_id' => $this->order_id, 'funding_source' => TransactionRefund::FUNDING_SOURCE_UNSETTLED]);
+        if ($refund->save() && $this->setReversed()) {
+            return true;
+        }
+        return false;
     }
 
     /**

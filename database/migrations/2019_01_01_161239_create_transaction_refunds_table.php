@@ -22,7 +22,7 @@ class CreateTransactionRefundsTable extends Migration
             $table->string('description',191)->nullable();//退款详情，最多 191 个 Unicode 字符。
             $table->string('failure_code')->nullable();//订单的错误码
             $table->string('failure_msg')->nullable();//订单的错误消息的描述。
-            $table->string('charge_order_no',64)->nullable();//商户订单号，这边返回的是  charge 对象中的  order_no 参数。
+            $table->string('charge_order_id',64)->nullable();//商户订单号，这边返回的是  charge 对象中的  order_no 参数。
             $table->string('transaction_no',64)->nullable();//交易流水号，由第三方渠道提供。
             $table->string('funding_source',20)->nullable();//微信及 QQ 类退款资金来源。取值范围： unsettled_funds ：使用未结算资金退款； recharge_funds ：微信-使用可用余额退款，QQ-使用可用现金账户资金退款。
             //注：默认值  unsettled_funds ，该参数对于微信渠道的退款来说仅适用于微信老资金流商户使用，包括  wx 、 wx_pub 、 wx_pub_qr 、 wx_lite 、 wx_wap 、 wx_pub_scan 六个渠道；
