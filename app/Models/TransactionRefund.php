@@ -8,6 +8,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Passport\Client;
 
 /**
  * 退款处理模型
@@ -41,4 +42,14 @@ class TransactionRefund extends Model
         'metadata' => 'array',
         'extra' => 'array'
     ];
+
+    /**
+     * Get the app relation.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function app()
+    {
+        return $this->belongsTo(Client::class);
+    }
 }

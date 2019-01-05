@@ -7,8 +7,10 @@
 
 namespace App\Models;
 
+use App\Jobs\TransactionChargeCallbackJob;
 use App\Models\Relations\BelongsToUserTrait;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Passport\Client;
 
 /**
  * 支付模型
@@ -55,6 +57,16 @@ class TransactionCharge extends Model
     ];
 
     /**
+     * Get the app relation.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function app()
+    {
+        return $this->belongsTo(Client::class);
+    }
+
+    /**
      * 设置已付款状态
      * @param string $transactionNo 支付渠道返回的交易流水号。
      * @return bool
@@ -65,7 +77,7 @@ class TransactionCharge extends Model
             return true;
         }
         $paid = (bool)$this->update(['transaction_no' => $transactionNo, 'time_paid' => $this->freshTimestamp(), 'paid' => true]);
-        //TODO 发送 主题广播回调
+        TransactionChargeCallbackJob::dispatch($this->app->notify_url, $this->toArray());
         return $paid;
     }
 }
