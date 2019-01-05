@@ -52,4 +52,14 @@ class TransactionRefund extends Model
     {
         return $this->belongsTo(Client::class);
     }
+
+    /**
+     * Get the charge relation.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function charge()
+    {
+        return $this->belongsTo(TransactionCharge::class);
+    }
 }
