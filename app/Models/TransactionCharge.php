@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $order_id
  * @property float $amount
  * @property string $currency
+ * @property boolean $paid
  *
  * @author Tongle Xu <xutongle@gmail.com>
  */
@@ -52,14 +53,6 @@ class TransactionCharge extends Model
         'metadata' => 'array',
         'credential' => 'array',
     ];
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
-     */
-    public function order()
-    {
-        return $this->morphTo();
-    }
 
     /**
      * 设置已付款状态
