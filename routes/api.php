@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Contracts\Routing\Registrar as RouteContract;
 use Illuminate\Support\Facades\Route;
 
@@ -47,6 +46,12 @@ Route::group(['prefix' => 'geographic'], function (RouteContract $api) {
  * REST ful specification.
  */
 Route::group(['prefix' => 'v1'], function (RouteContract $api) {
+    Route::group(['prefix' => 'transaction'], function () {
+        Route::post('charge', 'Api\V1\TransactionController@charge');//收款
+        Route::post('refund', 'Api\V1\TransactionController@refund');//退款
+        Route::post('transfer', 'Api\V1\TransactionController@transfer');//转账
+    });
+
     /**
      * 用户接口
      */
