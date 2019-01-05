@@ -46,6 +46,7 @@ class CreateTransactionTransferTable extends Migration
             $table->json('metadata')->nullable();//元数据
             $table->json('extra')->nullable();//附加参数
             $table->timestamp('transferred_at', 0)->nullable();//交易完成时间
+            $table->softDeletes();
             $table->timestamps();
         });
     }

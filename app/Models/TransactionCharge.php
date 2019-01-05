@@ -12,6 +12,7 @@ use App\Models\Relations\BelongsToUserTrait;
 use App\Services\TransactionService;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Log;
 use Laravel\Passport\Client;
 
@@ -30,7 +31,7 @@ use Laravel\Passport\Client;
  */
 class TransactionCharge extends Model
 {
-    use BelongsToUserTrait;
+    use BelongsToUserTrait,SoftDeletes;
 
     /**
      * The table associated with the model.
@@ -64,6 +65,19 @@ class TransactionCharge extends Model
     ];
 
     /**
+     * 应该被调整为日期的属性
+     *
+     * @var array
+     */
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        'deleted_at',
+        'time_paid',
+        'time_expire',
+    ];
+
+    /**
      * Get the app relation.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -89,31 +103,6 @@ class TransactionCharge extends Model
     public function setReversed()
     {
         return (bool)$this->update(['reversed' => true, 'credential' => null]);
-    }
-
-    /**
-     * 从交易里直接发起退款
-     * @param string $description
-     * @return bool
-     */
-    public function setRefund($description)
-    {
-        $refund = new TransactionRefund(['amount' => $this->amount, 'description' => $description, 'charge_id' => $this->id, 'charge_order_id' => $this->order_id, 'funding_source' => TransactionRefund::FUNDING_SOURCE_UNSETTLED]);
-        if ($refund->save() && $this->setReversed()) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * 设置交易凭证
-     * @param string $transactionNo 支付渠道返回的交易流水号。
-     * @param array $credential 支付凭证
-     * @return bool
-     */
-    public function setCredential($transactionNo, $credential)
-    {
-        return (bool)$this->update(['transaction_no' => $transactionNo, 'credential' => $credential]);
     }
 
     /**

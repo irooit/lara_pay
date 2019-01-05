@@ -8,6 +8,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Passport\Client;
 
 /**
@@ -17,6 +18,7 @@ use Laravel\Passport\Client;
  */
 class TransactionRefund extends Model
 {
+    use SoftDeletes;
     //退款状态
     const STATUS_PENDING = 0b0;
     const STATUS_SUCCEEDED = 0b1;
@@ -41,7 +43,7 @@ class TransactionRefund extends Model
      * @var array 批量赋值属性
      */
     public $fillable = [
-        'id', 'app_id', 'charge_id', 'amount', 'charge_order_id', 'funding_source'
+        'id', 'app_id', 'charge_id', 'amount', 'status', 'description', 'failure_code', 'failure_msg', 'charge_order_id', 'transaction_no', 'funding_source', 'metadata', 'extra', 'time_succeed'
     ];
 
     /**
@@ -56,6 +58,18 @@ class TransactionRefund extends Model
     ];
 
     /**
+     * 应该被调整为日期的属性
+     *
+     * @var array
+     */
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        'deleted_at',
+        'time_succeed',
+    ];
+
+    /**
      * Get the app relation.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -66,7 +80,7 @@ class TransactionRefund extends Model
     }
 
     /**
-     * Get the charge relation.
+     * 关联收单
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */

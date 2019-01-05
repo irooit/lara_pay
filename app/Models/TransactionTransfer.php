@@ -8,6 +8,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * 企业付款模型，处理提现
@@ -16,6 +17,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class TransactionTransfer extends Model
 {
+    use SoftDeletes;
+
     //付款状态
     const STATUS_SCHEDULED = 'scheduled';//scheduled: 待发送
     const STATUS_PENDING = 'pending';//pending: 处理中
@@ -41,5 +44,17 @@ class TransactionTransfer extends Model
     protected $casts = [
         'metadata' => 'array',
         'extra' => 'array'
+    ];
+
+    /**
+     * 应该被调整为日期的属性
+     *
+     * @var array
+     */
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        'deleted_at',
+        'transferred_at',
     ];
 }

@@ -30,6 +30,7 @@ class CreateTransactionRefundsTable extends Migration
             $table->string('metadata')->nullable();//元数据
             $table->string('extra')->nullable();//附加参数
             $table->timestamp('time_succeed', 0)->nullable();//退款成功的时间，用 Unix 时间戳表示。
+            $table->softDeletes();
             $table->timestamps();
 
             $table->foreign('app_id')->references('id')->on('oauth_clients');

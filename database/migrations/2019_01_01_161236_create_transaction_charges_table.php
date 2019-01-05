@@ -37,6 +37,7 @@ class CreateTransactionChargesTable extends Migration
             $table->json('metadata')->nullable();//metadata 参数 数组，一些源数据。
             $table->json('credential')->nullable();//支付凭证，用于客户端发起支付。
             $table->string('description', 191)->nullable();//订单附加说明，最多 191 个 Unicode 字符。
+            $table->softDeletes();
             $table->timestamps();
 
             $table->foreign('app_id')->references('id')->on('oauth_clients');
