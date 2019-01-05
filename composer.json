@@ -33,7 +33,7 @@
         "xutl/laravel-passport-socialite": "^1.0",
         "xutl/laravel-sms": "^1.0",
         "xutl/supports": "^1.0",
-	"yansongda/laravel-pay": "^2.0"
+        "yansongda/laravel-pay": "^2.0"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",
