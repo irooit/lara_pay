@@ -39,6 +39,6 @@ class PruneUserExtra implements ShouldQueue
     {
         $user = User::find($event->userId);
         $user->extra->increment('login_num', 1, ['login_at' => date('Y-m-d H:i:s'), 'login_ip' => Request::ip()]);
-        $user->getLoginHistories()->create(['ip' => Request::ip()]);
+        $user->loginHistories()->create(['ip' => Request::ip()]);
     }
 }

@@ -26,7 +26,7 @@ class CreateUserProfilesTable extends Migration
             $table->string('timezone')->nullable();
             $table->string('introduction')->nullable();
             $table->text('bio')->nullable();
-
+            $table->softDeletes();
             $table->foreign('user_id')->references('id')->on('users');
         });
     }

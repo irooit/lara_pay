@@ -7,7 +7,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+use App\Services\TransactionService;
+use Illuminate\Http\Request;
 
 /**
  * Class MainController

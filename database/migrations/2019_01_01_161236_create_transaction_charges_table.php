@@ -14,7 +14,7 @@ class CreateTransactionChargesTable extends Migration
     public function up()
     {
         Schema::create('transaction_charges', function (Blueprint $table) {
-            $table->increments('id');
+            $table->string('id',64)->unique();
             $table->unsignedInteger('app_id');//收款的App ID
             $table->boolean('paid')->default(false)->nullable();//是否已付款
             $table->boolean('refunded')->default(false)->nullable();//是否存在退款信息
@@ -39,7 +39,7 @@ class CreateTransactionChargesTable extends Migration
             $table->string('description', 191)->nullable();//订单附加说明，最多 191 个 Unicode 字符。
             $table->timestamps();
 
-            $table->foreign('app_id')->references('id')->on('transaction_apps');
+            $table->foreign('app_id')->references('id')->on('oauth_clients');
         });
     }
 

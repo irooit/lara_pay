@@ -14,7 +14,7 @@ class CreateTransactionTransferTable extends Migration
     public function up()
     {
         Schema::create('transaction_transfer', function (Blueprint $table) {
-            $table->increments('id');
+            $table->string('id',64)->unique();
             $table->string('type',5);//付款类型，转账到个人用户为 b2c，转账到企业用户为 b2b（wx、wx_pub、wx_lite 和 balance 渠道的企业付款，仅支持 b2c）。
             $table->string('channel',64);//付款渠道
 

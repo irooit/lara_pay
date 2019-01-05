@@ -19,6 +19,7 @@ class CreateUserExtrasTable extends Migration
             $table->dateTime('login_at')->nullable();
             $table->unsignedInteger('login_num')->default(0)->nullable();
             $table->foreign('user_id')->references('id')->on('users');
+            $table->softDeletes();
         });
     }
 

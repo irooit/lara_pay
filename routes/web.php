@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', 'Web\MainController@index');
+Route::get('/', 'MainController@index');
 
 //认证
 Auth::routes(['verify' => true]);

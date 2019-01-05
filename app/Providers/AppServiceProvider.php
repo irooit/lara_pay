@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Models\Tag;
+use App\Models\TransactionCharge;
 use App\Models\User;
+use App\Observers\TransactionChargeObserver;
 use App\Observers\UserObserver;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Resources\Json\Resource;
@@ -25,12 +27,13 @@ class AppServiceProvider extends ServiceProvider
         //关闭 API 响应的 data 包裹
         Resource::withoutWrapping();
         User::observe(UserObserver::class);
+        TransactionCharge::observe(TransactionChargeObserver::class);
 
         //多态映射表
-        Relation::morphMap([
+//        Relation::morphMap([
 //            'tags' => Tag::class,
 //            'videos' => 'App\Video',
-        ]);
+//        ]);
     }
 
     /**

@@ -29,6 +29,10 @@ class TransactionTransfer extends Model
      */
     protected $table = 'transaction_transfer';
 
+    protected $primaryKey = 'id';
+
+    public $incrementing = false;
+
     /**
      * 这个属性应该被转换为原生类型.
      *
